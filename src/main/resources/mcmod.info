@@ -1,0 +1,21 @@
+{
+	"modListVersion": 2,
+	"modList": [{
+		"modid": "${modId}",
+		"name": "${modName}",
+		"description": "GTNH 神秘时代研究台自动求解：网格工具条、加权模式、路径预览、要素合成与一键解锁。",
+		"version": "${modVersion}",
+		"mcversion": "${minecraftVersion}",
+		"url": "",
+		"updateUrl": "",
+		"authorList": ["emil", "wohaopa"],
+		"credits": "基于 TCAutoResearchUnofficial / TC4Helper (MIT)；默认权重来自 GTNH 中文维基 (CC0)",
+		"logoFile": "",
+		"screenshots": [],
+		"parent": "",
+		"requiredMods": ["Thaumcraft"],
+		"dependencies": [],
+		"dependants": [],
+		"useDependencyInformation": false
+	}]
+}

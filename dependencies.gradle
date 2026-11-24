@@ -1,0 +1,11 @@
+dependencies {
+    // 编译期依赖，不打包进产物
+    implementation("thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev")
+
+    // 权重方案 JSON 持久化
+    implementation("com.google.code.gson:gson:2.2.4")
+
+    // 仅运行时使用，不发布为依赖
+    runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.9.13-GTNH:dev")
+    runtimeOnly("com.github.GTNewHorizons:thaumcraft-research-tweaks:1.5.0:dev")
+}

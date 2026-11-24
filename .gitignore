@@ -1,0 +1,19 @@
+# Gradle
+.gradle/
+build/
+
+# 运行目录（runClient/runServer 生成）
+run/
+
+# 本地核心算法测试产物
+out/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# 系统文件
+.DS_Store
+Thumbs.db

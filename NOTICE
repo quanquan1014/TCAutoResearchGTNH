@@ -1,0 +1,21 @@
+# NOTICE
+
+本项目为 GTNH 2.9.0 的神秘时代研究台辅助模组，代码移植/重写自以下开源项目（均为 MIT）：
+
+- TC4AutoResearch-weighted —— https://github.com/lekior/TC4AutoResearch-weighted
+  原作者：lekior（fork 自 cdj68765/TC4AutoResearch）
+- TCAutoResearchUnofficial —— https://github.com/lubenwei935-max/TCAutoResearchUnofficial
+  原作者：Emil（cdj68765）、wohaopa、Mr.Chang
+- TC4Helper —— https://github.com/wohaopa/TC4Helper
+  原作者：wohaopa
+
+默认要素权重数据来自 GTNH 中文维基：
+  Data:神秘时代研究助手.tabx
+  https://gtnh.huijiwiki.com/wiki/Data:%E7%A5%9E%E7%A7%98%E6%97%B6%E4%BB%A3%E7%A0%94%E7%A9%B6%E5%8A%A9%E6%89%8B.tabx
+  基于知识共享 CC0（Creative Commons Zero）授权。
+
+第三方组件声明：
+- Thaumcraft（GTNH fork）为闭源模组，仅作为编译期依赖，不随本仓库分发，亦不打包进产物 jar。
+- 本模组运行时依赖 Thaumcraft（GTNH fork）与可选的 thaumcraft-research-tweaks。
+
+本模组与 Azanor、Mojang、MinecraftForge、GT New Horizons 团队均无隶属关系。

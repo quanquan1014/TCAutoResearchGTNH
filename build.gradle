@@ -1,0 +1,6 @@
+plugins {
+    id 'com.gtnewhorizons.gtnhconvention'
+}
+
+// 手动指定版本号
+project.ext.modVersion = '1.0.0'

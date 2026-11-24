@@ -1,0 +1,4 @@
+// 额外仓库（通常为空，includeWellKnownRepositories 已包含 GTNH/CurseMaven 等）
+repositories {
+
+}
