@@ -51,6 +51,7 @@ public final class GuiResearchQueue extends GuiScreen {
     private GuiButton generateButton;
     private GuiButton generateVisibleButton;
     private GuiButton unlockResearchableButton;
+    private GuiButton unlockNonWarpButton;
     private GuiButton previousCategoryButton;
     private GuiButton nextCategoryButton;
     private String selectedKey;
@@ -113,11 +114,20 @@ public final class GuiResearchQueue extends GuiScreen {
             5,
             center - 130,
             height - 66,
-            260,
+            125,
             20,
             StatCollector.translateToLocal("tcautores.unlock_researchable"));
         unlockResearchableButton.visible = researchTableMode;
         buttonList.add(unlockResearchableButton);
+        unlockNonWarpButton = new GuiButtonExt(
+            8,
+            center + 5,
+            height - 66,
+            125,
+            20,
+            StatCollector.translateToLocal("tcautores.unlock_nonwarp"));
+        unlockNonWarpButton.visible = researchTableMode;
+        buttonList.add(unlockNonWarpButton);
         previousCategoryButton = new GuiButtonExt(6, listX(), CATEGORY_Y, 18, 20, "<");
         nextCategoryButton = new GuiButtonExt(7, listX() + listWidth() - 18, CATEGORY_Y, 18, 20, ">");
         buttonList.add(previousCategoryButton);
@@ -130,6 +140,7 @@ public final class GuiResearchQueue extends GuiScreen {
         tooltips.put(5, "解锁范围内全部可生成的研究");
         tooltips.put(6, "切换到上一页目录");
         tooltips.put(7, "切换到下一页目录");
+        tooltips.put(8, "解锁范围内无扭曲的研究");
         updateCategoryButtons();
         refresh();
     }
@@ -189,6 +200,10 @@ public final class GuiResearchQueue extends GuiScreen {
         } else if (button.id == 5 && researchTableMode) {
             TargetResearchController
                 .startAllResearchable(ResearchTableHelper.INSTANCE, mc.thePlayer, mc, scope, category);
+            mc.displayGuiScreen(parent);
+        } else if (button.id == 8 && researchTableMode) {
+            TargetResearchController
+                .startAllResearchableNonWarp(ResearchTableHelper.INSTANCE, mc.thePlayer, mc, scope, category);
             mc.displayGuiScreen(parent);
         } else if (button.id == 6) {
             categoryScroll = Math.max(0, categoryScroll - visibleCategoryCount());
@@ -280,6 +295,7 @@ public final class GuiResearchQueue extends GuiScreen {
         int rows = visibleRows();
         drawRect(listX - 2, listY - 2, listX + listWidth() + 2, listY + rows * ROW_HEIGHT + 2, 0xB0101010);
         RenderItem renderer = new RenderItem();
+        ResearchCatalog.Entry hoveredEntry = null;
         for (int row = 0; row < rows && scroll + row < filtered.size(); row++) {
             ResearchCatalog.Entry entry = filtered.get(scroll + row);
             int y = listY + row * ROW_HEIGHT;
@@ -308,11 +324,23 @@ public final class GuiResearchQueue extends GuiScreen {
                 y + 14,
                 0x888888);
             String status = statusText(entry.status);
+            int statusX = listX + listWidth() - fontRendererObj.getStringWidth(status) - 5;
             fontRendererObj.drawString(
                 status,
-                listX + listWidth() - fontRendererObj.getStringWidth(status) - 5,
+                statusX,
                 y + 8,
                 entry.status == ResearchCatalog.Status.READY ? 0x80D890 : 0xAAAAAA);
+            if (entry.warp > 0) {
+                String warpText = "扭曲 " + entry.warp;
+                fontRendererObj.drawString(
+                    warpText,
+                    statusX - fontRendererObj.getStringWidth(warpText) - 8,
+                    y + 8,
+                    0xC06090);
+            }
+            if (hovered && !entry.missingPrerequisites.isEmpty()) {
+                hoveredEntry = entry;
+            }
         }
         if (filtered.isEmpty()) {
             drawCenteredString(
@@ -327,6 +355,16 @@ public final class GuiResearchQueue extends GuiScreen {
             : ResearchNoteGenerationController.progressText();
         updateButtons();
         super.drawScreen(mouseX, mouseY, partialTicks);
+        if (hoveredEntry != null) {
+            java.util.List<String> lines = new java.util.ArrayList<>();
+            lines.add("前置未完成：");
+            for (String key : hoveredEntry.missingPrerequisites) {
+                thaumcraft.api.research.ResearchItem item = ResearchCategories.getResearch(key);
+                lines.add("  " + (item == null ? key : item.getName()) + " [" + key + "]");
+            }
+            drawHoveringText(lines, mouseX, mouseY, fontRendererObj);
+            return;
+        }
         GuiButton hoveredButton = tooltips.hovered(buttonList, mouseX, mouseY);
         if (hoveredButton != null) {
             drawHoveringText(java.util.Collections.singletonList(tooltips.text(hoveredButton.id)),
@@ -401,6 +439,7 @@ public final class GuiResearchQueue extends GuiScreen {
             && (researchTableMode || selected.status == ResearchCatalog.Status.READY);
         generateVisibleButton.enabled = researchTableMode ? !running && selected != null : running || hasVisibleReady();
         unlockResearchableButton.enabled = researchTableMode && !running;
+        unlockNonWarpButton.enabled = researchTableMode && !running;
     }
 
     private boolean hasResearchableWork() {

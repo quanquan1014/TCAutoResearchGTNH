@@ -12,6 +12,7 @@ import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayer;
 
+import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.research.ResearchCategories;
 import thaumcraft.api.research.ResearchCategoryList;
 import thaumcraft.api.research.ResearchItem;
@@ -35,10 +36,16 @@ public final class ResearchCatalog {
 
         public final ResearchItem research;
         public final Status status;
+        /** 研究带来的扭曲值。 */
+        public final int warp;
+        /** 尚未完成的前置研究 key。 */
+        public final List<String> missingPrerequisites;
 
-        private Entry(ResearchItem research, Status status) {
+        private Entry(ResearchItem research, Status status, int warp, List<String> missingPrerequisites) {
             this.research = research;
             this.status = status;
+            this.warp = warp;
+            this.missingPrerequisites = missingPrerequisites;
         }
     }
 
@@ -84,7 +91,9 @@ public final class ResearchCatalog {
                 Status status = classify(research, completed, hasNote, requisites,
                         thaumcraft.common.config.Config.researchDifficulty);
                 if (status != null) {
-                    result.add(new Entry(research, status));
+                    int warp = ThaumcraftApi.getWarp(research.key);
+                    List<String> missing = missingPrerequisiteKeys(research, completed);
+                    result.add(new Entry(research, status, warp, missing));
                 }
             }
         }
@@ -144,6 +153,17 @@ public final class ResearchCatalog {
         List<ResearchItem> result = new ArrayList<>();
         for (Entry entry : entries(player, scope, category)) {
             if (entry.status == Status.READY || entry.status == Status.HAS_NOTE) {
+                result.add(entry.research);
+            }
+        }
+        return result;
+    }
+
+    /** 可操作且不带来扭曲的研究。 */
+    public static List<ResearchItem> actionableNonWarp(EntityPlayer player, Scope scope, String category) {
+        List<ResearchItem> result = new ArrayList<>();
+        for (Entry entry : entries(player, scope, category)) {
+            if ((entry.status == Status.READY || entry.status == Status.HAS_NOTE) && entry.warp <= 0) {
                 result.add(entry.research);
             }
         }

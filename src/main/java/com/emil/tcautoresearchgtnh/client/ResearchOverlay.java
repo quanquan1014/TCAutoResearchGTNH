@@ -77,7 +77,7 @@ public final class ResearchOverlay {
                         BatchResearchController.start(ResearchTableHelper.INSTANCE, mc.thePlayer, mc);
                     }
                 });
-        search = add(buttonList, id++, "搜索研究", "按标签/目录搜索研究项目",
+        search = add(buttonList, id++, "研究目录", "浏览研究目录：显示扭曲与前置，生成笔记、解锁研究",
                 new Runnable() {
                     public void run() {
                         Minecraft.getMinecraft().displayGuiScreen(new GuiResearchQueue(gui, ResearchCatalog.currentCategory()));

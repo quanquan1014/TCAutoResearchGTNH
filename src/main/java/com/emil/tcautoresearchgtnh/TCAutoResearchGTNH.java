@@ -20,7 +20,7 @@ public class TCAutoResearchGTNH {
 
     public static final String MODID = "tcautoresearchgtnh";
     public static final String NAME = "TC Auto Research GTNH";
-    public static final String VERSION = "1.0.0";
+    public static final String VERSION = "1.1.0";
     public static final Logger LOG = LogManager.getLogger(MODID);
 
     @SidedProxy(

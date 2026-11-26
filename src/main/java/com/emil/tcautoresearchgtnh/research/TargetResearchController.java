@@ -53,6 +53,18 @@ public final class TargetResearchController {
             category);
     }
 
+    public static void startAllResearchableNonWarp(GuiResearchTableHelperInterface helper, EntityPlayer player,
+        Minecraft mc, ResearchCatalog.Scope scope, String category) {
+        startPlan(
+            helper,
+            player,
+            mc,
+            ResearchCatalog.actionableNonWarp(player, scope, category),
+            scope == ResearchCatalog.Scope.CURRENT_CATEGORY ? category : "ALL",
+            scope,
+            category);
+    }
+
     public static void startExistingNotes(GuiResearchTableHelperInterface helper, EntityPlayer player, Minecraft mc) {
         List<ResearchItem> research = new java.util.ArrayList<>();
         int discoveries = 0;
