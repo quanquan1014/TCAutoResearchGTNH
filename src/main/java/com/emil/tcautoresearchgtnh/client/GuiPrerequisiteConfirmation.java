@@ -33,6 +33,7 @@ public final class GuiPrerequisiteConfirmation extends GuiScreen {
     private ResearchPlan plan;
     private GuiButton executeButton;
     private int scroll;
+    private String selectedKey;
 
     public GuiPrerequisiteConfirmation(GuiScreen searchScreen, GuiScreen researchTableScreen,
         GuiResearchTableHelperInterface helper, ResearchItem target) {
@@ -106,6 +107,34 @@ public final class GuiPrerequisiteConfirmation extends GuiScreen {
     }
 
     @Override
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+        super.mouseClicked(mouseX, mouseY, mouseButton);
+        if (mouseButton != 0 || plan == null) {
+            return;
+        }
+        int x = listX();
+        int row = (mouseY - LIST_Y) / ROW_HEIGHT;
+        if (mouseX < x || mouseX >= x + listWidth() || mouseY < LIST_Y || row < 0 || row >= visibleRows()) {
+            return;
+        }
+        int index = scroll + row;
+        if (index < 0 || index >= plan.entries.size()) {
+            return;
+        }
+        ResearchPlan.Entry entry = plan.entries.get(index);
+        boolean doubleClick = entry.research.key.equals(selectedKey);
+        selectedKey = entry.research.key;
+        if (!doubleClick) {
+            return;
+        }
+        if (entry.action == ResearchPlan.Action.GENERATE_AND_SOLVE
+                || entry.action == ResearchPlan.Action.SOLVE_EXISTING) {
+            ResearchNoteGenerationController.start(mc.thePlayer, mc,
+                    java.util.Collections.singletonList(entry.research), null, true);
+        }
+    }
+
+    @Override
     public void handleMouseInput() {
         super.handleMouseInput();
         int wheel = Mouse.getEventDWheel();
@@ -148,12 +177,13 @@ public final class GuiPrerequisiteConfirmation extends GuiScreen {
             ResearchPlan.Entry entry = plan.entries.get(scroll + row);
             int y = LIST_Y + row * ROW_HEIGHT;
             boolean hovered = mouseX >= x && mouseX < x + listWidth() && mouseY >= y && mouseY < y + ROW_HEIGHT - 1;
+            boolean selected = entry.research.key != null && entry.research.key.equals(selectedKey);
             drawRect(
                 x,
                 y,
                 x + listWidth(),
                 y + ROW_HEIGHT - 1,
-                entry.target ? 0xCC52606A : hovered ? 0xAA383838 : 0xAA242424);
+                entry.target ? 0xCC52606A : selected ? 0xBB44505A : hovered ? 0xAA383838 : 0xAA242424);
             renderIcon(renderer, entry.research, x + 3, y + 3);
             String name = (entry.target ? StatCollector.translateToLocal("tcautores.plan_target_short") + " " : "")
                 + entry.research.getName();

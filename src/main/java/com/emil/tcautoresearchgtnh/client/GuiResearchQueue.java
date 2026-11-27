@@ -217,6 +217,7 @@ public final class GuiResearchQueue extends GuiScreen {
     @Override
     protected void keyTyped(char typedChar, int keyCode) {
         if (searchField.textboxKeyTyped(typedChar, keyCode)) {
+            scroll = 0;
             applyFilter();
             return;
         }
@@ -237,6 +238,7 @@ public final class GuiResearchQueue extends GuiScreen {
             ResearchCatalog.setCurrentCategory(category);
             scope = ResearchCatalog.Scope.CURRENT_CATEGORY;
             scopeButton.displayString = scopeText();
+            scroll = 0;
             refresh();
             return;
         }
@@ -251,10 +253,16 @@ public final class GuiResearchQueue extends GuiScreen {
         selectedKey = entry.research.key;
         updateButtons();
         if (doubleClick) {
-            if (entry.status == ResearchCatalog.Status.READY) {
-                ResearchNoteGenerationController.start(mc.thePlayer, mc,
-                        java.util.Collections.singletonList(entry.research), null, true);
-            } else if (!researchTableMode) {
+            if (researchTableMode) {
+                if (!entry.missingPrerequisites.isEmpty()) {
+                    // 前置未完成：打开「解锁所选及其前置」
+                    mc.displayGuiScreen(
+                        new GuiPrerequisiteConfirmation(this, parent, ResearchTableHelper.INSTANCE, entry.research));
+                } else if (entry.status == ResearchCatalog.Status.READY) {
+                    ResearchNoteGenerationController.start(mc.thePlayer, mc,
+                            java.util.Collections.singletonList(entry.research), null, true);
+                }
+            } else {
                 ResearchBrowserNavigation.request(entry.research);
                 mc.displayGuiScreen(new GuiResearchBrowser());
             }
@@ -423,7 +431,6 @@ public final class GuiResearchQueue extends GuiScreen {
             if (query.isEmpty() || haystack.contains(query)) filtered.add(entry);
         }
         if (selected() == null) selectedKey = filtered.isEmpty() ? null : filtered.get(0).research.key;
-        scroll = 0;
         clampScroll();
         updateButtons();
     }

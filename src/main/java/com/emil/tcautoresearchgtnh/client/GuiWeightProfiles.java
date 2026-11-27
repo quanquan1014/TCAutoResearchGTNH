@@ -61,6 +61,10 @@ public class GuiWeightProfiles extends GuiWeightScreen {
             return;
         }
         String name = nameField.getText().trim();
+        if (name.isEmpty() && button.id >= 1 && button.id <= 4) {
+            setStatus("tcautores.profile_name_required", false);
+            return;
+        }
         try {
             if (button.id == 1) {
                 selected = WeightProfileStore.saveCurrent(name);

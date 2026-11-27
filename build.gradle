@@ -3,4 +3,4 @@ plugins {
 }
 
 // 手动指定版本号
-project.ext.modVersion = '1.1.0'
+project.ext.modVersion = '1.2.0'

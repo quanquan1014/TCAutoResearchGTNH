@@ -29,6 +29,7 @@ tcautores.profile_exported=方案 JSON 已复制
 tcautores.profile_imported=方案已导入
 tcautores.profile_not_found=没有找到该方案
 tcautores.profile_error=方案数据或文件无效
+tcautores.profile_name_required=请先输入方案名称
 tcautores.mode_weighted=模式：加权最短
 tcautores.mode_normal=模式：常规最短
 tcautores.preset_wiki=Wiki 默认权重

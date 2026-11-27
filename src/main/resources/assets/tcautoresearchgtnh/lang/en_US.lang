@@ -29,6 +29,7 @@ tcautores.profile_exported=Profile JSON copied
 tcautores.profile_imported=Profile imported
 tcautores.profile_not_found=Profile not found
 tcautores.profile_error=Invalid profile data or file
+tcautores.profile_name_required=Enter a profile name first
 tcautores.mode_weighted=Mode: Weighted shortest
 tcautores.mode_normal=Mode: Normal shortest
 tcautores.preset_wiki=Wiki default weights
